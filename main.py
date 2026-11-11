@@ -1,7 +1,7 @@
 import os, json, threading, urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-TOKEN = os.environ["BBHBCE0AUHYFVUSORHIPHFHXELHZMMXKPXZDLNIBSFASLZMDFGGMLQDGZYHGEFXS"]
+TOKEN = os.environ["BOT_TOKEN"]
 API = "https://botapi.rubika.ir/v3/" + TOKEN + "/"
 PAGES = ["📄 صفحه ۱", "📄 صفحه ۲", "📄 صفحه ۳", "📄 صفحه ۴", "📄 صفحه ۵"]
 
