@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 TOKEN = os.environ["BOT_TOKEN"]
 API = "https://botapi.rubika.ir/v3/" + TOKEN + "/"
-PAGES = ["📄 صفحه ۱", "📄 صفحه ۲", "📄 صفحه ۳", "📄 صفحه ۴", "📄 صفحه ۵"]
+HELLO = "سلام 👋\nمن یارگپ هستم.\nاین یک پیام تست است."
 
 def call(method, data):
     t = time.time()
@@ -16,30 +16,13 @@ def call(method, data):
         return res
     except Exception as e:
         print("ERR", method, e)
-def keypad(i):
-    b = []
-    if i > 0:
-        b.append({"id": "p_%d" % (i - 1), "type": "Simple", "button_text": "◀️ قبلی"})
-    if i < len(PAGES) - 1:
-        b.append({"id": "p_%d" % (i + 1), "type": "Simple", "button_text": "بعدی ▶️"})
-    return {"rows": [{"buttons": b}]}
 
 def handle(body):
     try:
-        print("IN", str(body)[:200])
-        if "inline_message" in body:
-            m = body["inline_message"]
-            bid = m.get("button_id") or (m.get("aux_data") or {}).get("button_id")
-            i = int(bid.split("_")[1])
-            call("editMessageText", {"chat_id": m["chat_id"],
-                 "message_id": m["message_id"], "text": PAGES[i]})
-            call("editMessageKeypad", {"chat_id": m["chat_id"],
-                 "message_id": m["message_id"], "inline_keypad": keypad(i)})
-        elif "update" in body:
-            u = body["update"]
-            if u.get("type") == "NewMessage":
-                call("sendMessage", {"chat_id": u["chat_id"],
-                     "text": PAGES[0], "inline_keypad": keypad(0)})
+        u = body.get("update")
+        if u and u.get("type") == "NewMessage":
+            print("GOT", u["chat_id"])
+            call("sendMessage", {"chat_id": u["chat_id"], "text": HELLO})
     except Exception as e:
         print("ERR handle", e)
 
