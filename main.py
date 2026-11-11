@@ -27,7 +27,8 @@ def handle(body):
         print("IN", str(body)[:200])
         if "inline_message" in body:
             m = body["inline_message"]
-            i = int(m["button_id"].split("_")[1])
+            bid = m.get("button_id") or (m.get("aux_data") or {}).get("button_id")
+            i = int(bid.split("_")[1])
             call("editMessageText", {"chat_id": m["chat_id"],
                  "message_id": m["message_id"], "text": PAGES[i]})
             call("editMessageKeypad", {"chat_id": m["chat_id"],
