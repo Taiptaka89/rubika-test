@@ -1,4 +1,4 @@
-import os, json, threading, urllib.request
+import os, json, time, threading, urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 TOKEN = os.environ["BOT_TOKEN"]
@@ -6,14 +6,16 @@ API = "https://botapi.rubika.ir/v3/" + TOKEN + "/"
 PAGES = ["📄 صفحه ۱", "📄 صفحه ۲", "📄 صفحه ۳", "📄 صفحه ۴", "📄 صفحه ۵"]
 
 def call(method, data):
+    t = time.time()
     req = urllib.request.Request(API + method, json.dumps(data).encode(),
                                  {"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=15) as r:
-            return json.loads(r.read())
+            res = json.loads(r.read())
+        print("T", method, round(time.time() - t, 2))
+        return res
     except Exception as e:
         print("ERR", method, e)
-
 def keypad(i):
     b = []
     if i > 0:
